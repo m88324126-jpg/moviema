@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MovieMate</title>
+<style>
+:root{
+  --bg:#0a0a12;--accent:#ff4757;--purple:#5f27cd;
+  --text:#f0f0f5;--muted:#8b8b9e;--border:#2a2a3e;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;background:var(--bg);overflow:hidden;height:100vh}
+
+#splash{
+  position:fixed;inset:0;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:9999;transition:opacity 1.5s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+#splash.hide{opacity:0;pointer-events:none}
+
+.splash-logo{
+  font-size:72px;font-weight:800;text-align:center;letter-spacing:-2px;
+  background:linear-gradient(90deg,#ff4757,#5f27cd,#ff4757,#c0392b,#5f27cd,#ff4757);
+  background-size:500% 100%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:shimmer 6s linear infinite;
+}
+@keyframes shimmer{0%{background-position:0% 50%}100%{background-position:500% 50%}}
+
+.splash-icon{
+  font-size:64px;margin-bottom:16px;opacity:0;
+  animation:popBounce 1.8s cubic-bezier(0.17,0.67,0.19,0.99) forwards 0.5s;
+}
+@keyframes popBounce{
+  0%{transform:scale(0);opacity:0}
+  60%{transform:scale(1.1);opacity:1}
+  100%{transform:scale(1);opacity:1}
+}
+
+.splash-desc{
+  color:var(--muted);font-size:18px;margin-top:20px;text-align:center;opacity:0;
+  animation:fadeUp 2.5s ease-out forwards 1.8s;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+.splash-bar{
+  width:260px;height:4px;background:var(--border);border-radius:4px;
+  margin-top:36px;overflow:hidden;opacity:0;
+  animation:barShow 0.8s ease-out forwards 2.2s;
+}
+@keyframes barShow{to{opacity:1}}
+.splash-bar-fill{
+  width:0%;height:100%;
+  background:linear-gradient(90deg,var(--accent),var(--purple));
+  border-radius:4px;
+  animation:barFill 4.8s ease-out forwards 2.2s;
+}
+@keyframes barFill{to{width:100%}}
+
+.splash-skip{
+  position:fixed;bottom:24px;right:24px;
+  color:var(--muted);font-size:13px;cursor:pointer;opacity:0;
+  padding:10px 18px;border:1px solid var(--border);border-radius:8px;
+  transition:color .4s,border-color .4s,opacity .4s;
+  animation:fadeInBtn 1s ease-out forwards 3.8s;
+}
+.splash-skip:hover{color:var(--text);border-color:var(--accent)}
+@keyframes fadeInBtn{to{opacity:1}}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="splash-icon"></div>
+  <div class="splash-logo">MovieMate</div>
+  <div class="splash-desc">твой гид по фильмам и сериалам соболезнуем школьникам </div>
+  <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+</div>
+
+<div class="splash-skip" onclick="goHome()">Пропустить →</div>
+
+<script>
+function goHome(){
+  /* Показываем заставку только раз в сессии браузера */
+  if(sessionStorage.getItem('mm_splash_seen') === '1'){
+    location.href = 'home.html';
+    return;
+  }
+  sessionStorage.setItem('mm_splash_seen', '1');
+
+  var s = document.getElementById('splash');
+  s.classList.add('hide');
+  setTimeout(function(){window.location.href='home.html'},1500);
+}
+
+setTimeout(goHome, 5000);
+</script>
+</body>
+</html>
